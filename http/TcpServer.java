@@ -1,10 +1,3 @@
-/**
- * Implementazione di un server web utilizzando la comunicazione tramite socket.
- * Lettura dati multi riga provenienti dal client
- * 
- * from folder network/..
- * javac network/TcpServer.java; java network.TcpServer 
- */
 package network;
 
 import java.io.*;
@@ -45,7 +38,7 @@ public class TcpServer {
 				//clientMsg += "Connection: close\r\n";
 				//clientMsg += "Content-Type: text/plain\r\n";
 				clientMsg += "\r\n";
-				clientMsg += "Biffardi Joseph";
+				clientMsg += "Saluti dal web server Java";
 				outStream.write(clientMsg.getBytes());
 				outStream.flush();
 
