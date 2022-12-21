@@ -16,6 +16,7 @@ public class TcpServer {
 		
 		final int SERVER_PORT=8765;
 		String clientMsg = "";
+		String replace = "";
 		
 		try {			 
 			// Creazione del socket sul server e ascolto sulla porta
@@ -31,30 +32,33 @@ public class TcpServer {
 				// Create output stream to write data and input stream to read data from socket
 				DataOutputStream outStream = new DataOutputStream(clientSocket.getOutputStream());	
 				BufferedReader inStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	
+				replace = "comando non riconosciuto";
 				// ---------------------------------------------------------
 				//Lettura dati dal client un righa alla volta   
-				clientMsg=inStream.readLine();
-				System.out.println(clientMsg);	
-				String replace = (clientMsg.replace("GET /", "")).replace(" HTTP/1.1", "");
-				System.out.println(replace);
-
-
-				
+				while ((clientMsg=inStream.readLine()).length() != 0) {
+					
+					if(clientMsg.contains("accendi"))
+						replace="accendi";
+					else if(clientMsg.contains("spegni"))
+						replace="spegni";	
+				}	
+				System.out.println("-"+replace+"-");	
 
 				// Elaborare qui i dati ricevuti dal client 
 				// ---------------------------------------------------------
 
 				//Invio dei dati su stream di rete al client
-				clientMsg = "HTTP/1.1 200 OK\r\n";
+				String serverMsg = "HTTP/1.1 200 OK\r\n";
 				//clientMsg += "Connection: close\r\n";
 				//clientMsg += "Content-Type: text/plain\r\n";
-				clientMsg += "\r\n";
+				serverMsg += "\r\n";
 				if(replace=="accendi")
-					clientMsg += "Luce accesa :)";
+					serverMsg += "Luce accesa :)";
 				else if(replace=="spegni")
-					clientMsg += "Luce spenta :(";
-				outStream.write(clientMsg.getBytes());
+					serverMsg += "Luce spenta :(";
+				else
+					serverMsg += "comando non riconosciuto";
+				outStream.write(serverMsg.getBytes());
 				outStream.flush();
 
 				System.out.println("\n....................... Fine ricezione dati\n");
